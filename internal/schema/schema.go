@@ -26,6 +26,10 @@ func Migrate(db *sql.DB) error {
 	if err := state.EnsureSchema(ctx, db); err != nil {
 		return fmt.Errorf("ensure state schema: %w", err)
 	}
+	// sync.Run uses the scoped cursor variant (state.NewScoped), which needs its own table.
+	if err := state.EnsureScopedSchema(ctx, db); err != nil {
+		return fmt.Errorf("ensure scoped state schema: %w", err)
+	}
 
 	// 2. Execute the LinkedInclaw-specific table definitions
 	queries := []string{
