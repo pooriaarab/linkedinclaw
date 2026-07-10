@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "LinkedInClaw Companion",
+  "version": "1.0.0",
+  "description": "Companion extension for linkedinclaw to passively refresh session cookies.",
+  "permissions": [
+    "cookies"
+  ],
+  "host_permissions": [
+    "*://*.linkedin.com/*",
+    "http://127.0.0.1/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
