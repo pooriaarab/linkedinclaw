@@ -15,6 +15,7 @@ type CLI struct {
 	Login       cli.LoginCmd        `cmd:"" help:"Log in to LinkedIn using a real Chrome profile."`
 	Sync        cli.SyncCmd         `cmd:"" help:"Synchronize LinkedIn data."`
 	Export      cli.ExportCmd       `cmd:"" help:"Export commands for LinkedIn data."`
+	Mirror      cli.MirrorCmd       `cmd:"" help:"Manage git-backed archive publish/subscribe."`
 	Search      cli.SearchCmd       `cmd:"" help:"Search messages, posts, and saved posts using FTS5."`
 	Messages    cli.MessagesCmd     `cmd:"" help:"Query messages by sender name and time window."`
 	Tui         cli.TuiCmd          `cmd:"" help:"Browse all data in an interactive terminal user interface."`

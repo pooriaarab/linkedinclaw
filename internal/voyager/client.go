@@ -20,7 +20,7 @@ type Client struct {
 	jsessionID  string
 	Limiter     *rate.Limiter
 	BaseURL     string
-	backoffBase time.Duration
+	BackoffBase time.Duration
 }
 
 // NewClient creates a new Client with default configurations.
@@ -31,7 +31,7 @@ func NewClient(liAt, jsessionID string) *Client {
 		jsessionID:  jsessionID,
 		Limiter:     rate.NewLimiter(rate.Every(time.Minute/20), 1), // default 20 requests/minute
 		BaseURL:     "https://www.linkedin.com/voyager/api",
-		backoffBase: 1 * time.Second,
+		BackoffBase: 1 * time.Second,
 	}
 }
 
@@ -77,7 +77,7 @@ func (c *Client) do(ctx context.Context, method, path string) (*http.Response, e
 			}
 
 			// Exponential backoff: base * 2^(attempt-1)
-			backoff := c.backoffBase * (1 << (attempt - 1))
+			backoff := c.BackoffBase * (1 << (attempt - 1))
 
 			select {
 			case <-ctx.Done():
