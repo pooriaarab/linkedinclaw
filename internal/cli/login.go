@@ -54,15 +54,30 @@ func (c *LoginCmd) Run() (err error) {
 	}
 
 	type Cookie struct {
-		Name   string `json:"name"`
-		Value  string `json:"value"`
-		Domain string `json:"domain"`
+		Domain   string  `json:"domain"`
+		Expires  float64 `json:"expires"`
+		HTTPOnly bool    `json:"httpOnly"`
+		Name     string  `json:"name"`
+		Path     string  `json:"path"`
+		Secure   bool    `json:"secure"`
+		Session  bool    `json:"session"`
+		Size     int     `json:"size"`
+		Value    string  `json:"value"`
 	}
 
-	var cookies []Cookie
-	if err := json.Unmarshal(cookiesBytes, &cookies); err != nil {
+	var wrapper struct {
+		Success bool `json:"success"`
+		Data    struct {
+			Cookies []Cookie `json:"cookies"`
+		} `json:"data"`
+		Error interface{} `json:"error"`
+	}
+
+	if err := json.Unmarshal(cookiesBytes, &wrapper); err != nil {
 		return fmt.Errorf("failed to parse cookie JSON output: %w", err)
 	}
+
+	cookies := wrapper.Data.Cookies
 
 	var liAt, jsessionID string
 	for _, cookie := range cookies {
