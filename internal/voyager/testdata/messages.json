@@ -1,0 +1,18 @@
+{
+  "elements": [
+    {
+      "urn": "urn:li:fs_message:999",
+      "conversationUrn": "urn:li:fs_conversation:111",
+      "senderUrn": "urn:li:fs_miniProfile:67890",
+      "body": "Hello! How is it going?",
+      "sentAt": "2026-07-08T22:10:00Z"
+    },
+    {
+      "urn": "urn:li:fs_message:1000",
+      "conversationUrn": "urn:li:fs_conversation:111",
+      "senderUrn": "urn:li:fs_miniProfile:12345",
+      "body": "Going great, thanks!",
+      "sentAt": "2026-07-08T22:15:00Z"
+    }
+  ]
+}

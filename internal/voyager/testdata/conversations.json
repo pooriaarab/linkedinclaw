@@ -1,0 +1,14 @@
+{
+  "elements": [
+    {
+      "urn": "urn:li:fs_conversation:111",
+      "participants": "urn:li:fs_miniProfile:12345,urn:li:fs_miniProfile:67890",
+      "lastActivityAt": "2026-07-08T22:15:00Z"
+    },
+    {
+      "urn": "urn:li:fs_conversation:222",
+      "participants": "urn:li:fs_miniProfile:12345,urn:li:fs_miniProfile:11111",
+      "lastActivityAt": "2026-07-05T14:10:00Z"
+    }
+  ]
+}
