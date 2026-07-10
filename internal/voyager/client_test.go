@@ -63,7 +63,7 @@ func TestClient_RetriesAndDeferred(t *testing.T) {
 
 	client := NewClient(liAt, jsessionID)
 	client.BaseURL = server.URL
-	client.backoffBase = 1 * time.Millisecond // very short backoff for testing
+	client.BackoffBase = 1 * time.Millisecond // very short backoff for testing
 	// Bypass or configure limiter so we don't delay the test
 	client.Limiter = nil
 
