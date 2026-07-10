@@ -1,0 +1,14 @@
+{
+  "elements": [
+    {
+      "urn": "urn:li:fs_followingCompany:333",
+      "name": "Google",
+      "followedAt": "2026-07-09T11:00:00Z"
+    },
+    {
+      "urn": "urn:li:fs_followingCompany:444",
+      "name": "Apple",
+      "followedAt": "2026-05-12T09:45:00Z"
+    }
+  ]
+}

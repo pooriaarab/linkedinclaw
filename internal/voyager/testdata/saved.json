@@ -1,0 +1,16 @@
+{
+  "elements": [
+    {
+      "urn": "urn:li:fs_savedPost:789",
+      "author": "Alice Williams",
+      "body": "A comprehensive guide to concurrency patterns in Go.",
+      "savedAt": "2026-07-09T10:15:30Z"
+    },
+    {
+      "urn": "urn:li:fs_savedPost:012",
+      "author": "Charlie Brown",
+      "body": "Understanding SQL database index design and query optimization.",
+      "savedAt": "2026-07-04T18:05:00Z"
+    }
+  ]
+}

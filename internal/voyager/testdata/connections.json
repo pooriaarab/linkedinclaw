@@ -1,0 +1,20 @@
+{
+  "elements": [
+    {
+      "urn": "urn:li:fs_miniProfile:67890",
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "headline": "Engineering Manager",
+      "company": "Google",
+      "connectedAt": "2026-07-01T12:00:00Z"
+    },
+    {
+      "urn": "urn:li:fs_miniProfile:11111",
+      "firstName": "Bob",
+      "lastName": "Johnson",
+      "headline": "Product Designer",
+      "company": "Apple",
+      "connectedAt": "2026-06-15T08:30:00Z"
+    }
+  ]
+}
