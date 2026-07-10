@@ -1,0 +1,18 @@
+{
+  "elements": [
+    {
+      "urn": "urn:li:fs_feedUpdate:123",
+      "body": "Excited to share that I started a new position as Software Engineer!",
+      "postedAt": "2026-07-09T09:00:00Z",
+      "likeCount": 150,
+      "commentCount": 45
+    },
+    {
+      "urn": "urn:li:fs_feedUpdate:456",
+      "body": "Had an amazing time presenting at the Go conference today.",
+      "postedAt": "2026-06-25T15:30:00Z",
+      "likeCount": 85,
+      "commentCount": 12
+    }
+  ]
+}
