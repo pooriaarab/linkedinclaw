@@ -6,7 +6,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 )
 
 // Conversation represents a messaging conversation.
@@ -45,9 +47,18 @@ func (c *Client) FetchConversations(ctx context.Context) ([]Conversation, error)
 		return nil, fmt.Errorf("unexpected status code %d fetching conversations", resp.StatusCode)
 	}
 
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read conversations body: %w", err)
+	}
+
 	var res conversationsResponse
-	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+	if err := json.Unmarshal(bodyBytes, &res); err != nil {
 		return nil, fmt.Errorf("failed to decode conversations JSON: %w", err)
+	}
+
+	if len(res.Elements) == 0 && isNonTrivialBody(bodyBytes) {
+		fmt.Fprintln(os.Stderr, "warning: parsed 0 conversations from a non-empty response -- field-shape assumptions for this endpoint are unverified")
 	}
 
 	return res.Elements, nil
@@ -66,9 +77,18 @@ func (c *Client) FetchMessages(ctx context.Context, conversationUrn string) ([]M
 		return nil, fmt.Errorf("unexpected status code %d fetching messages", resp.StatusCode)
 	}
 
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read messages body: %w", err)
+	}
+
 	var res messagesResponse
-	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+	if err := json.Unmarshal(bodyBytes, &res); err != nil {
 		return nil, fmt.Errorf("failed to decode messages JSON: %w", err)
+	}
+
+	if len(res.Elements) == 0 && isNonTrivialBody(bodyBytes) {
+		fmt.Fprintln(os.Stderr, "warning: parsed 0 messages from a non-empty response -- field-shape assumptions for this endpoint are unverified")
 	}
 
 	return res.Elements, nil

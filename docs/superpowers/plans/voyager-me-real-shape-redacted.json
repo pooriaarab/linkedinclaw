@@ -1,0 +1,48 @@
+{
+  "plainId": "<number>",
+  "miniProfile": {
+    "memorialized": "<bool>",
+    "lastName": "<string>",
+    "dashEntityUrn": "<string>",
+    "standardizedPronoun": "<string>",
+    "occupation": "<string>",
+    "objectUrn": "<string>",
+    "$anti_abuse_metadata": {
+      "$anti_abuse_uuid": "<string>"
+    },
+    "backgroundImage": {
+      "com.linkedin.common.VectorImage": {
+        "digitalmediaAsset": "<string>",
+        "artifacts": [
+          {
+            "width": "<number>",
+            "fileIdentifyingUrlPathSegment": "<string>",
+            "expiresAt": "<number>",
+            "height": "<number>"
+          }
+        ],
+        "rootUrl": "<string>"
+      }
+    },
+    "picture": {
+      "com.linkedin.common.VectorImage": {
+        "digitalmediaAsset": "<string>",
+        "artifacts": [
+          {
+            "width": "<number>",
+            "fileIdentifyingUrlPathSegment": "<string>",
+            "expiresAt": "<number>",
+            "height": "<number>"
+          }
+        ],
+        "rootUrl": "<string>"
+      }
+    },
+    "firstName": "<string>",
+    "entityUrn": "<string>",
+    "publicIdentifier": "<string>",
+    "trackingId": "<string>"
+  },
+  "publicContactInfo": {},
+  "premiumSubscriber": "<bool>"
+}
