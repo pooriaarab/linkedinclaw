@@ -6,7 +6,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 )
 
 // SavedPost represents a bookmarked or saved post on LinkedIn.
@@ -33,9 +35,18 @@ func (c *Client) FetchSavedPosts(ctx context.Context) ([]SavedPost, error) {
 		return nil, fmt.Errorf("unexpected status code %d fetching saved posts", resp.StatusCode)
 	}
 
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read saved posts body: %w", err)
+	}
+
 	var res savedPostsResponse
-	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+	if err := json.Unmarshal(bodyBytes, &res); err != nil {
 		return nil, fmt.Errorf("failed to decode saved posts JSON: %w", err)
+	}
+
+	if len(res.Elements) == 0 && isNonTrivialBody(bodyBytes) {
+		fmt.Fprintln(os.Stderr, "warning: parsed 0 saved posts from a non-empty response -- field-shape assumptions for this endpoint are unverified")
 	}
 
 	return res.Elements, nil
