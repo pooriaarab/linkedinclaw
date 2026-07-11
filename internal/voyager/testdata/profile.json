@@ -1,6 +1,11 @@
 {
-  "urn": "urn:li:fs_miniProfile:12345",
-  "firstName": "John",
-  "lastName": "Doe",
-  "headline": "Software Engineer at LinkedIn"
+  "plainId": 12345,
+  "miniProfile": {
+    "entityUrn": "urn:li:fs_miniProfile:12345",
+    "firstName": "John",
+    "lastName": "Doe",
+    "occupation": "Software Engineer at LinkedIn",
+    "publicIdentifier": "johndoe"
+  },
+  "premiumSubscriber": false
 }
