@@ -50,7 +50,7 @@ func (c *LoginCmd) Run() (err error) {
 	fmt.Println("Extracting cookies...")
 	cookiesBytes, err := runCmdWithOutput("agent-browser", "cookies", "get", "--json")
 	if err != nil {
-		return fmt.Errorf("failed to get cookies from browser: %w", err)
+		return fmt.Errorf("failed to get cookies from agent-browser (exit error, see agent-browser directly for details)")
 	}
 
 	type Cookie struct {
@@ -101,11 +101,7 @@ func (c *LoginCmd) Run() (err error) {
 		return fmt.Errorf("failed to store session in keyring: %w", err)
 	}
 
-	liAtShort := liAt
-	if len(liAtShort) > 6 {
-		liAtShort = liAtShort[:6]
-	}
-	fmt.Printf("Session stored (li_at: %s...)\n", liAtShort)
+	fmt.Println("Session stored.")
 
 	return nil
 }

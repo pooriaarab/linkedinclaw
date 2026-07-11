@@ -6,7 +6,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 )
 
 // Connection represents a first-degree connection on LinkedIn.
@@ -35,9 +37,18 @@ func (c *Client) FetchConnections(ctx context.Context) ([]Connection, error) {
 		return nil, fmt.Errorf("unexpected status code %d fetching connections", resp.StatusCode)
 	}
 
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read connections body: %w", err)
+	}
+
 	var res connectionsResponse
-	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+	if err := json.Unmarshal(bodyBytes, &res); err != nil {
 		return nil, fmt.Errorf("failed to decode connections JSON: %w", err)
+	}
+
+	if len(res.Elements) == 0 && isNonTrivialBody(bodyBytes) {
+		fmt.Fprintln(os.Stderr, "warning: parsed 0 connections from a non-empty response -- field-shape assumptions for this endpoint are unverified")
 	}
 
 	return res.Elements, nil

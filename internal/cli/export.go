@@ -1,8 +1,10 @@
 package cli
 
 import (
+	"bufio"
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/openclaw/crawlkit/config"
 	"github.com/openclaw/crawlkit/store"
@@ -109,8 +111,33 @@ func (c *ExportImportCmd) Run() error {
 type ExportRequestCmd struct{}
 
 // Run executes the export request subcommand.
-func (c *ExportRequestCmd) Run() error {
-	// TODO(next): wire this to the agent-browser skill per the plan's Task 6 step 4
-	fmt.Println("This will drive LinkedIn's Settings -> 'Get a copy of your data' flow via the agent-browser skill (not yet wired up). For now, request your export manually at linkedin.com/psettings/member-data, then run: linkedinclaw export import <path-to-zip>")
+func (c *ExportRequestCmd) Run() (err error) {
+	// Defer closing the agent-browser session
+	defer func() {
+		if closeErr := runCmd("agent-browser", "close"); closeErr != nil {
+			if err == nil {
+				err = closeErr
+			} else {
+				fmt.Fprintf(os.Stderr, "Warning: failed to close agent-browser: %v\n", closeErr)
+			}
+		}
+	}()
+
+	fmt.Println("Opening LinkedIn Data Export settings in Chrome...")
+	if err := runCmd("agent-browser", "--profile", "Default", "open", "https://www.linkedin.com/psettings/member-data"); err != nil {
+		return fmt.Errorf("failed to open LinkedIn data-export settings: %w", err)
+	}
+
+	if err := runCmd("agent-browser", "wait", "3000"); err != nil {
+		return fmt.Errorf("failed during agent-browser wait: %w", err)
+	}
+
+	fmt.Println("Please select the data categories you want and submit the request manually in the opened browser window.")
+	fmt.Println("Press Enter here once you have submitted the request or closed the browser.")
+	if _, err := bufio.NewReader(os.Stdin).ReadString('\n'); err != nil {
+		return fmt.Errorf("failed to read from stdin: %w", err)
+	}
+
+	fmt.Println("Once you have the zip file from LinkedIn, run: linkedinclaw export import <path-to-zip>")
 	return nil
 }

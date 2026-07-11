@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	"golang.org/x/time/rate"
@@ -91,4 +92,16 @@ func (c *Client) do(ctx context.Context, method, path string) (*http.Response, e
 	}
 
 	return nil, ErrDeferred
+}
+
+// isNonTrivialBody checks if a JSON body contains non-trivial content beyond standard empty definitions.
+func isNonTrivialBody(body []byte) bool {
+	s := strings.Map(func(r rune) rune {
+		if r == ' ' || r == '\t' || r == '\n' || r == '\r' || r == '"' || r == '\'' || r == '`' {
+			return -1
+		}
+		return r
+	}, string(body))
+	s = strings.ToLower(s)
+	return s != "" && s != "null" && s != "{}" && s != "[]" && s != "{elements:[]}" && s != "{elements:null}"
 }

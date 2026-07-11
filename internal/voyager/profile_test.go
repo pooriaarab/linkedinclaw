@@ -23,8 +23,8 @@ func TestFetchProfile(t *testing.T) {
 	}
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/identity/profiles/me" {
-			t.Errorf("expected path /identity/profiles/me, got %q", r.URL.Path)
+		if r.URL.Path != "/me" {
+			t.Errorf("expected path /me, got %q", r.URL.Path)
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -41,16 +41,19 @@ func TestFetchProfile(t *testing.T) {
 		t.Fatalf("FetchProfile returned error: %v", err)
 	}
 
-	if profile.Urn != expected.Urn {
-		t.Errorf("expected Urn %q, got %q", expected.Urn, profile.Urn)
+	if profile.MiniProfile.EntityUrn != expected.MiniProfile.EntityUrn {
+		t.Errorf("expected EntityUrn %q, got %q", expected.MiniProfile.EntityUrn, profile.MiniProfile.EntityUrn)
 	}
-	if profile.FirstName != expected.FirstName {
-		t.Errorf("expected FirstName %q, got %q", expected.FirstName, profile.FirstName)
+	if profile.MiniProfile.FirstName != expected.MiniProfile.FirstName {
+		t.Errorf("expected FirstName %q, got %q", expected.MiniProfile.FirstName, profile.MiniProfile.FirstName)
 	}
-	if profile.LastName != expected.LastName {
-		t.Errorf("expected LastName %q, got %q", expected.LastName, profile.LastName)
+	if profile.MiniProfile.LastName != expected.MiniProfile.LastName {
+		t.Errorf("expected LastName %q, got %q", expected.MiniProfile.LastName, profile.MiniProfile.LastName)
 	}
-	if profile.Headline != expected.Headline {
-		t.Errorf("expected Headline %q, got %q", expected.Headline, profile.Headline)
+	if profile.MiniProfile.Occupation != expected.MiniProfile.Occupation {
+		t.Errorf("expected Occupation %q, got %q", expected.MiniProfile.Occupation, profile.MiniProfile.Occupation)
+	}
+	if profile.MiniProfile.PublicIdentifier != expected.MiniProfile.PublicIdentifier {
+		t.Errorf("expected PublicIdentifier %q, got %q", expected.MiniProfile.PublicIdentifier, profile.MiniProfile.PublicIdentifier)
 	}
 }

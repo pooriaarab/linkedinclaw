@@ -6,7 +6,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 )
 
 // Post represents an authored post on LinkedIn.
@@ -34,9 +36,18 @@ func (c *Client) FetchOwnPosts(ctx context.Context) ([]Post, error) {
 		return nil, fmt.Errorf("unexpected status code %d fetching own posts", resp.StatusCode)
 	}
 
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read posts body: %w", err)
+	}
+
 	var res postsResponse
-	if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+	if err := json.Unmarshal(bodyBytes, &res); err != nil {
 		return nil, fmt.Errorf("failed to decode posts JSON: %w", err)
+	}
+
+	if len(res.Elements) == 0 && isNonTrivialBody(bodyBytes) {
+		fmt.Fprintln(os.Stderr, "warning: parsed 0 posts from a non-empty response -- field-shape assumptions for this endpoint are unverified")
 	}
 
 	return res.Elements, nil
