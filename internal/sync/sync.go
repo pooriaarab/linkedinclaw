@@ -51,15 +51,7 @@ func Run(ctx context.Context, db *sql.DB, client *voyager.Client, source Source,
 	var summary Summary
 
 	if source == SourceExport {
-		summary.Deferred = []string{
-			"profile",
-			schema.CategoryConnections,
-			schema.CategoryConversations,
-			schema.CategoryPosts,
-			schema.CategorySavedPosts,
-			schema.CategoryCompaniesFollowed,
-		}
-		summary.Comment = "export-only sync isn't wired up until the exportzip package exists"
+		summary.Comment = "export-only sync performs no API scan -- use `linkedinclaw export import <zip>` directly"
 		return summary, nil
 	}
 
@@ -79,7 +71,7 @@ func Run(ctx context.Context, db *sql.DB, client *voyager.Client, source Source,
 				_, err = tx.ExecContext(ctx, `
 					INSERT OR REPLACE INTO profile (id, urn, first_name, last_name, headline, updated_at)
 					VALUES (1, ?, ?, ?, ?, ?);
-				`, p.Urn, p.FirstName, p.LastName, p.Headline, time.Now().Format(time.RFC3339))
+				`, p.MiniProfile.EntityUrn, p.MiniProfile.FirstName, p.MiniProfile.LastName, p.MiniProfile.Occupation, time.Now().Format(time.RFC3339))
 				return err
 			},
 		},

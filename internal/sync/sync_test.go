@@ -42,9 +42,9 @@ func TestRun_Integration(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		switch r.URL.Path {
-		case "/identity/profiles/me":
+		case "/me":
 			w.WriteHeader(http.StatusOK)
-			_, _ = w.Write([]byte(`{ "urn": "urn:li:fs_miniProfile:12345", "firstName": "John", "lastName": "Doe", "headline": "Software Engineer" }`))
+			_, _ = w.Write([]byte(`{ "miniProfile": { "entityUrn": "urn:li:fs_miniProfile:12345", "firstName": "John", "lastName": "Doe", "occupation": "Software Engineer" } }`))
 		case "/relationships/connections":
 			w.WriteHeader(http.StatusOK)
 			_, _ = w.Write([]byte(`{ "elements": [ { "urn": "urn:li:fs_miniProfile:67890", "firstName": "Jane", "lastName": "Smith", "headline": "Product Manager", "company": "Google", "connectedAt": "2026-07-01T12:00:00Z" } ] }`))
@@ -176,11 +176,12 @@ func TestRun_SourceExport(t *testing.T) {
 		t.Fatalf("sync.Run for SourceExport returned error: %v", err)
 	}
 
-	if len(summary.Deferred) != 6 {
-		t.Errorf("expected 6 deferred categories for SourceExport, got %d: %v", len(summary.Deferred), summary.Deferred)
+	if len(summary.Deferred) != 0 {
+		t.Errorf("expected 0 deferred categories for SourceExport, got %d: %v", len(summary.Deferred), summary.Deferred)
 	}
-	if summary.Comment == "" {
-		t.Error("expected comment explaining export-only sync in SourceExport path")
+	expectedComment := "export-only sync performs no API scan -- use `linkedinclaw export import <zip>` directly"
+	if summary.Comment != expectedComment {
+		t.Errorf("expected comment %q, got %q", expectedComment, summary.Comment)
 	}
 }
 
@@ -209,8 +210,8 @@ func TestRun_SourceBoth_Downloads(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		switch r.URL.Path {
-		case "/identity/profiles/me":
-			_, _ = w.Write([]byte(`{ "urn": "urn:li:fs_miniProfile:12345", "firstName": "John", "lastName": "Doe" }`))
+		case "/me":
+			_, _ = w.Write([]byte(`{ "miniProfile": { "entityUrn": "urn:li:fs_miniProfile:12345", "firstName": "John", "lastName": "Doe" } }`))
 		case "/relationships/connections":
 			_, _ = w.Write([]byte(`{ "elements": [] }`))
 		case "/messaging/conversations":
