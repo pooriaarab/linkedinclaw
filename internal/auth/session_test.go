@@ -8,8 +8,60 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
+
+	"github.com/zalando/go-keyring"
 )
+
+func TestStoreAndResolve_Keyring(t *testing.T) {
+	if runtime.GOOS != "darwin" {
+		t.Skip("skipping keyring test on non-darwin OS")
+	}
+
+	// Initialize in-memory mock keyring provider
+	keyring.MockInit()
+
+	// Use only a synthetic, dummy service name to avoid ever touching real 'linkedinclaw' credentials
+	origService := keyringService
+	keyringService = "linkedinclaw-synthetic-test"
+	defer func() { keyringService = origService }()
+
+	// Clean up environment variables to ensure we actually hit the mocked keyring path
+	origLiAt := os.Getenv("LINKEDINCLAW_LI_AT")
+	origJSession := os.Getenv("LINKEDINCLAW_JSESSIONID")
+	os.Unsetenv("LINKEDINCLAW_LI_AT")
+	os.Unsetenv("LINKEDINCLAW_JSESSIONID")
+	defer func() {
+		if origLiAt != "" {
+			os.Setenv("LINKEDINCLAW_LI_AT", origLiAt)
+		}
+		if origJSession != "" {
+			os.Setenv("LINKEDINCLAW_JSESSIONID", origJSession)
+		}
+	}()
+
+	testLiAt := "test-li-at-value"
+	testJSessionID := "test-jsessionid-value"
+
+	// Call Store
+	if err := Store(testLiAt, testJSessionID); err != nil {
+		t.Fatalf("Store returned error: %v", err)
+	}
+
+	// Call Resolve
+	gotLiAt, gotJSessionID, err := Resolve()
+	if err != nil {
+		t.Fatalf("Resolve returned error: %v", err)
+	}
+
+	if gotLiAt != testLiAt {
+		t.Errorf("expected li_at to be %q, got %q", testLiAt, gotLiAt)
+	}
+	if gotJSessionID != testJSessionID {
+		t.Errorf("expected jsessionid to be %q, got %q", testJSessionID, gotJSessionID)
+	}
+}
 
 func TestResolve_EnvShortCircuit(t *testing.T) {
 	expectedLiAt := "some-li-at-cookie-value"
