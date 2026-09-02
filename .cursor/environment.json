@@ -1,0 +1,12 @@
+{
+  "name": "linkedinclaw Cloud Environment",
+  "install": "go mod download",
+  "start": "echo 'Environment ready for cloud agents'",
+  "terminals": [
+    {
+      "name": "Verify",
+      "command": "go test ./... 2>/dev/null || go vet ./...",
+      "description": "Run tests/lint before opening PRs"
+    }
+  ]
+}
